@@ -1,14 +1,256 @@
-/* Selector de etiqueta general */
-body {
-  background-color: #ffffff;
+/* Estilos Base y Fondo Blanco */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
-  margin: 10px;
-  padding: 10px;
+  transition: all 0.3s ease;
 }
 
-/* Selector por clase (.) */
-.encabezado-principal {
+body {
+  background-color: #ffffff;
+  color: #333;
+}
+
+/* Encabezado Negro */
+.header {
   background-color: #000000;
-  margin: -20px;
-  padding: 1px;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  cursor: pointer;
+  height: 40px;
+}
+
+.cart-container {
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.cart-icon {
+  color: #ffffff;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Control de Secciones */
+.seccion {
+  display: none;
+  padding: 20px;
+}
+
+.seccion.activa {
+  display: block;
+}
+
+/* Botones Principales */
+.controles-filas {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.controles-filas button {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.controles-filas button:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+/* Filas y Recuadros Grisáceos con Sombra */
+.contenedor-filas {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+}
+
+.fila-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.fila-recuadros {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  width: 750px;
+}
+
+.recuadro {
+  width: 130px;
+  height: 190px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+/* Animación al pasar el mouse */
+.recuadro:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  opacity: 1;
+}
+
+/* Recuadro Central Sobresaliente */
+.recuadro.destacado {
+  transform: translateY(-15px) scale(1.1);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+  border: 2px solid #3498db;
+  opacity: 1;
+  z-index: 2;
+}
+
+.recuadro img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.recuadro p {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Botones de Navegación del Carrusel */
+.btn-nav {
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.btn-nav:hover {
+  background-color: #555;
+  transform: scale(1.1);
+}
+
+.btn-agregar-carrito {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-agregar-carrito:hover {
+  background-color: #219150;
+  transform: scale(1.05);
+}
+
+/* Layout del Carrito: 3/4 Izquierda, 1/4 Derecha */
+.carrito-layout {
+  display: flex;
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.carrito-lista-container {
+  flex: 3;
+  /* Ocupa 3/4 partes (75% del ancho) */
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  min-height: 300px;
+}
+
+.carrito-pagos-container {
+  flex: 1;
+  /* Ocupa 1/4 parte (25% del ancho) */
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.item-carrito {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.item-carrito img {
+  width: 50px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.metodo-pago {
+  display: block;
+  margin: 15px 0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-pagar {
+  width: 100%;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.btn-pagar:hover {
+  background-color: #219150;
 }

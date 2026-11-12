@@ -1,52 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<!-- Nombre de la pagina-->
-
 <head>
   <meta charset="UTF-8">
-  <title>ATPstore</title>
-  <!--estilos para la pagina-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tienda Interactiva</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<!-- Cuerpo principal de la pagina-->
-
 <body>
-  <!-- Todo lo que esta en el principio de la pagina-->
-  <header class="encabezado-principal">
-    <!-- Logo de la pagina-->
-    <a href="#"><img src="logos/Logo_ATPstore_Blanco.png" alt="logo" width="120" height="105"></img></a>
 
-    <!--
-    <nav>
+  <!-- 1. Encabezado negro con logo y carrito -->
+  <header class="header">
+    <div class="logo-container" onclick="mostrarSeccion('principal')">
+      <img src="[suspicious link removed]" alt="Logo" class="logo">
+    </div>
 
-      <ul>
-        <li>
-          Menu de navegacion de la pagina
-          <a href="index.html">Inicio</a> 
-        </li>
-      </ul>
-    
-    </nav>
-  -->
+    <div class="cart-container" onclick="mostrarSeccion('carrito')">
+      <span class="cart-icon">🛒</span>
+      <span id="cart-count" class="cart-badge">0</span>
+    </div>
   </header>
 
+  <!-- 2. Página Principal (Filas y Recuadros) -->
+  <main id="pagina-principal" class="seccion activa">
+    <div class="controles-filas">
+      <button id="btn-agregar-fila" onclick="agregarFila()">➕ Agregar Fila de Recuadros</button>
+      <button id="btn-eliminar-fila" onclick="eliminarFila()">➖ Eliminar Fila</button>
+    </div>
 
-  <!-- Todo lo que esta en el medio de la pagina y contenido mas importante-->
-  <main>
-    <section>
-      <p>Antes de empezar queremos saber unas cuantas cosas sobre ti.</p>
+    <!-- Contenedor dinámico donde se generan las filas -->
+    <div id="contenedor-filas" class="contenedor-filas"></div>
   </main>
 
-  <!-- Todo lo que esta en final de la pagina-->
-  <footer>
-    <p>ATPstore</p>
-  </footer>
+  <!-- 3. Apartado de Carrito de Compras -->
+  <main id="pagina-carrito" class="seccion">
+    <div class="carrito-layout">
+      <!-- 3/4 de la pantalla: Lista de artículos -->
+      <section class="carrito-lista-container">
+        <h2>Tus Artículos Seleccionados</h2>
+        <div id="lista-carrito" class="lista-carrito">
+          <p id="carrito-vacio-msg">Todavía no tienes ningún articulo en tu carrito de compras</p>
+        </div>
+      </section>
 
-  <!-- Scripts para las funciones de la pagina-->
+      <!-- 1/4 de la pantalla: Métodos de pago -->
+      <aside class="carrito-pagos-container">
+        <h2>Métodos de Pago</h2>
+        <div class="opciones-pago">
+          <label class="metodo-pago">
+            <input type="radio" name="pago" checked> 💳 Tarjeta de Crédito / Débito
+          </label>
+          <label class="metodo-pago">
+            <input type="radio" name="pago"> 🅿️ PayPal
+          </label>
+          <label class="metodo-pago">
+            <input type="radio" name="pago"> 🏦 Transferencia Bancaria
+          </label>
+        </div>
+        <button class="btn-pagar" onclick="alert('¡Gracias por tu compra!')">Proceder al Pago</button>
+      </aside>
+    </div>
+  </main>
+
   <script src="script.js"></script>
-
 </body>
 
 </html>
