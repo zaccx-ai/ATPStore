@@ -1,153 +1,193 @@
 
-// Galería de imágenes secuenciales sin repetir
-const galeriaImagenes = [
-  { id: 101, titulo: "Articulo 1", url: "[suspicious link removed]" },
-  { id: 102, titulo: "Articulo 2", url: "[suspicious link removed]" },
-  { id: 103, titulo: "Articulo 3", url: "[suspicious link removed]" },
-  { id: 104, titulo: "Articulo 4", url: "[suspicious link removed]" },
-  { id: 105, titulo: "Articulo 5", url: "[suspicious link removed]" },
-  { id: 106, titulo: "Articulo 6", url: "[suspicious link removed]" },
-  { id: 107, titulo: "Articulo 7", url: "[suspicious link removed]" },
-  { id: 108, titulo: "Articulo 8", url: "[suspicious link removed]" },
-  { id: 109, titulo: "Articulo 9", url: "[suspicious link removed]" },
-  { id: 110, titulo: "Articulo 10", url: "[suspicious link removed]" }
+// Base de datos de productos secuenciales con degradados
+const productosBase = [
+  { id: "IMG-01", num: "01", grad: "grad-3" },
+  { id: "IMG-02", num: "02", grad: "grad-4" },
+  { id: "IMG-03", num: "03", grad: "grad-5" },
+  { id: "IMG-11", num: "11", grad: "grad-1" },
+  { id: "IMG-12", num: "12", grad: "grad-2" },
+  { id: "IMG-04", num: "04", grad: "grad-6" },
+  { id: "IMG-05", num: "05", grad: "grad-7" },
+  { id: "IMG-06", num: "06", grad: "grad-8" },
+  { id: "IMG-07", num: "07", grad: "grad-9" }
 ];
 
 let carrito = [];
-let contadorImagen = 0;
+let contadorGlobal = 0;
 let filas = [];
+let idFilaContador = 1;
 
-// Alternar visibilidad entre vista principal y carrito
+// Alternar visibilidad entre la página principal y el carrito
 function mostrarSeccion(seccion) {
-  document.getElementById('pagina-principal').classList.remove('activa');
-  document.getElementById('pagina-carrito').classList.remove('activa');
+  const principal = document.getElementById('pagina-principal');
+  const carritoSec = document.getElementById('pagina-carrito');
+
+  if (!principal || !carritoSec) return;
+
+  principal.classList.remove('activa');
+  carritoSec.classList.remove('activa');
 
   if (seccion === 'principal') {
-    document.getElementById('pagina-principal').classList.add('activa');
+    principal.classList.add('activa');
   } else {
-    document.getElementById('pagina-carrito').classList.add('activa');
+    carritoSec.classList.add('activa');
     renderizarCarrito();
   }
 }
 
-// Agregar nueva fila (máximo 3)
+// Crear nueva fila de recuadros cuando se da clic en el botón
 function agregarFila() {
-  if (filas.length >= 3) return;
+  if (filas.length <= 3) return;
 
-  const filaId = filas.length;
   const items = [];
-
-  // Seleccionar 5 imágenes secuenciales
   for (let i = 0; i < 5; i++) {
-    items.push(galeriaImagenes[contadorImagen % galeriaImagenes.length]);
-    contadorImagen++;
+    items.push(productosBase[contadorGlobal % productosBase.length]);
+    contadorGlobal++;
   }
 
-  filas.push({ id: filaId, items });
-  renderizarFilas();
-  actualizarVisibilidadBoton();
+  filas.push({ id: idFilaContador++, items });
+  renderizarFilas(true); // Se activa la animación de entrada
+  actualizarBotonFila();
 }
 
-// Eliminar fila existente
-function eliminarFila() {
-  if (filas.length > 0) {
-    filas.pop();
-    renderizarFilas();
-    actualizarVisibilidadBoton();
-  }
+// Eliminar fila por su ID al hacer clic en ✕
+function eliminarFilaPorId(idFila) {
+  filas = filas.filter(f => f.id !== idFila);
+  renderizarFilas(false);
+  actualizarBotonFila();
 }
 
-// Ocultar botón si se alcanza el máximo de 3 filas
-function actualizarVisibilidadBoton() {
-  const btnAgregar = document.getElementById('btn-agregar-fila');
-  if (filas.length >= 3) {
-    btnAgregar.style.display = 'none';
-  } else {
-    btnAgregar.style.display = 'inline-block';
+// Visibilidad del botón según el máximo de 3 filas
+function actualizarBotonFila() {
+  const btn = document.getElementById('btn-agregar-fila');
+  if (btn) {
+    btn.style.display = filas.length <= 3 ? 'none' : 'inline-block';
   }
 }
 
-// Mover los recuadros de derecha a izquierda
-function moverFila(indexFila) {
+// Desplazar recuadros de derecha a izquierda con la flecha &gt;
+function desplazarDerecha(indexFila) {
+  if (!filas[indexFila]) return;
   const fila = filas[indexFila];
-  fila.items.shift(); // Elimina el elemento de la izquierda
-  fila.items.push(galeriaImagenes[contadorImagen % galeriaImagenes.length]); // Añade uno nuevo a la derecha
-  contadorImagen++;
-  renderizarFilas();
+  fila.items.shift(); // Desaparece el de la izquierda
+  fila.items.push(productosBase[contadorGlobal % productosBase.length]); // Aparece el nuevo por la derecha
+  contadorGlobal++;
+  renderizarFilas(true);
 }
 
-// Dibujar las filas y recuadros en la pantalla
-function renderizarFilas() {
+// Desplazar recuadros hacia la izquierda con la flecha &lt;
+function desplazarIzquierda(indexFila) {
+  if (!filas[indexFila]) return;
+  const fila = filas[indexFila];
+  fila.items.pop();
+  fila.items.unshift(productosBase[contadorGlobal % productosBase.length]);
+  contadorGlobal++;
+  renderizarFilas(true);
+}
+
+// Renderizar recuadros y aplicar animación
+function renderizarFilas(animar = false) {
   const contenedor = document.getElementById('contenedor-filas');
+  if (!contenedor) return;
+
   contenedor.innerHTML = '';
 
-  filas.forEach((fila, index) => {
-    const filaWrapper = document.createElement('div');
-    filaWrapper.className = 'fila-wrapper';
+  filas.forEach((fila, idxFila) => {
+    const cardFila = document.createElement('div');
+    cardFila.className = `card-container-fila ${animar ? 'animar-entrada' : ''}`;
 
-    const filaRecuadros = document.createElement('div');
-    filaRecuadros.className = 'fila-recuadros';
+    const headerFila = document.createElement('div');
+    headerFila.className = 'header-fila';
+    headerFila.innerHTML = `
+      <span>Fila ${idxFila + 1}</span>
+      
+    `;
 
-    fila.items.forEach((item, itemIndex) => {
+    const carruselBody = document.createElement('div');
+    carruselBody.className = 'carrusel-body';
+
+    const btnPrev = document.createElement('button');
+    btnPrev.className = 'btn-nav-arrow';
+    btnPrev.innerText = '‹';
+    btnPrev.onclick = () => desplazarIzquierda(idxFila);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid-recuadros';
+
+    fila.items.forEach((item, itemIdx) => {
       const recuadro = document.createElement('div');
-      // El recuadro del centro (índice 2) es el principal destacado
-      recuadro.className = `recuadro ${itemIndex === 2 ? 'destacado' : ''}`;
+      recuadro.className = `recuadro ${itemIdx === 2 ? 'destacado' : ''} ${animar ? 'animar-recuadro' : ''}`;
       recuadro.innerHTML = `
-        
-        <p>${item.titulo}</p>
-        <small>ID: #${item.id}</small>
+        <div>
+          <span>${itemIdx === 2 ? item.num : ''}</span>
+        </div>
+        <div>${item.id}</div>
       `;
-      filaRecuadros.appendChild(recuadro);
+      grid.appendChild(recuadro);
     });
 
-    // Botón de salto de recuadro
-    const btnMover = document.createElement('button');
-    btnMover.className = 'btn-nav';
-    btnMover.innerHTML = '▶';
-    btnMover.onclick = () => moverFila(index);
+    const btnNext = document.createElement('button');
+    btnNext.className = 'btn-nav-arrow';
+    btnNext.innerText = '›';
+    btnNext.onclick = () => desplazarDerecha(idxFila);
 
-    // Botón de envío del recuadro central al carrito
-    const btnCarrito = document.createElement('button');
-    btnCarrito.className = 'btn-agregar-carrito';
-    btnCarrito.innerText = '🛒 Agregar Central al Carrito';
-    btnCarrito.onclick = () => agregarAlCarrito(fila.items[2]);
+    carruselBody.appendChild(btnPrev);
+    carruselBody.appendChild(grid);
+    carruselBody.appendChild(btnNext);
 
-    filaWrapper.appendChild(filaRecuadros);
-    filaWrapper.appendChild(btnMover);
-    filaWrapper.appendChild(btnCarrito);
-    contenedor.appendChild(filaWrapper);
+    const footerFila = document.createElement('div');
+    footerFila.className = 'footer-fila';
+    footerFila.innerHTML = `
+      
+    `;
+
+    cardFila.appendChild(headerFila);
+    cardFila.appendChild(carruselBody);
+    cardFila.appendChild(footerFila);
+    contenedor.appendChild(cardFila);
   });
 }
 
-// Agregar elemento al carrito e incrementar contador
-function agregarAlCarrito(item) {
-  carrito.push(item);
-  document.getElementById('cart-count').innerText = carrito.length;
+// Agregar producto central al carrito
+function agregarCentralAlCarrito(indexFila) {
+  if (!filas[indexFila]) return;
+  const productoCentral = filas[indexFila].items[2];
+  carrito.push(productoCentral);
+
+  const badge = document.getElementById('cart-count');
+  if (badge) badge.innerText = carrito.length;
 }
 
-// Mostrar artículos o mensaje de carrito vacío
+// Eliminar producto individual del carrito
+function eliminarDelCarrito(indexItem) {
+  carrito.splice(indexItem, 1);
+  const badge = document.getElementById('cart-count');
+  if (badge) badge.innerText = carrito.length;
+  renderizarCarrito();
+}
+
+// Renderizar la sección del carrito
 function renderizarCarrito() {
-  const listaContainer = document.getElementById('lista-carrito');
+  const container = document.getElementById('lista-carrito');
+  if (!container) return;
 
   if (carrito.length === 0) {
-    listaContainer.innerHTML = '<p>Todavía no tienes ningún articulo en tu carrito de compras</p>';
+    container.innerHTML = '<p>Todavía no tienes ningún articulo en tu carrito de compras</p>';
     return;
   }
 
-  listaContainer.innerHTML = '';
-  carrito.forEach((item) => {
+  container.innerHTML = '';
+  carrito.forEach((item, idx) => {
     const itemDiv = document.createElement('div');
     itemDiv.className = 'item-carrito';
     itemDiv.innerHTML = `
-      
+      <div>${item.num}</div>
       <div>
-        <h4>${item.titulo}</h4>
-        <small>ID de producto: #${item.id}</small>
+        <h4>Producto ${item.id}</h4>
+        <small>ID Identificador: #${item.id}</small>
       </div>
+      
     `;
-    listaContainer.appendChild(itemDiv);
+    container.appendChild(itemDiv);
   });
 }
-
-// Inicializar con 1 fila
-agregarFila();
