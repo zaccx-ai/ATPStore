@@ -1,0 +1,1 @@
+alert("¡Hola! Tu archivo JavaScript está enlazado correctamente.");
